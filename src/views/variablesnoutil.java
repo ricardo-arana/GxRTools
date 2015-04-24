@@ -5,6 +5,7 @@
  */
 package views;
 
+import org.apache.commons.lang3.StringUtils;
 import java.util.StringTokenizer;
 
 /**
@@ -137,7 +138,7 @@ public class variablesnoutil extends javax.swing.JFrame {
         while(st.hasMoreTokens()){
             palabra = st.nextToken();
             
-            encontrado = codigoFuente.contains(palabra);
+            encontrado =  StringUtils.containsIgnoreCase(codigoFuente, palabra);
             
             if(encontrado){
             } else {
