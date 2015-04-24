@@ -58,6 +58,7 @@ public class variablesnoutil extends javax.swing.JFrame {
         });
 
         txtVariables.setColumns(20);
+        txtVariables.setLineWrap(true);
         txtVariables.setRows(5);
         jScrollPane2.setViewportView(txtVariables);
 
