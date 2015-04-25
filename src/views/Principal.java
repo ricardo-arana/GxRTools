@@ -32,6 +32,7 @@ public class Principal extends javax.swing.JFrame {
         menuCerrar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         menuVarNoU = new javax.swing.JMenuItem();
+        menuTrama = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GxRTools");
@@ -57,6 +58,14 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         jMenu2.add(menuVarNoU);
+
+        menuTrama.setText("Lector de trama");
+        menuTrama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuTramaActionPerformed(evt);
+            }
+        });
+        jMenu2.add(menuTrama);
 
         jMenuBar1.add(jMenu2);
 
@@ -87,6 +96,13 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_menuCerrarActionPerformed
+
+    private void menuTramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTramaActionPerformed
+        // TODO add your handling code here:
+        Tramas tm = new Tramas();
+        tm.show();
+        this.dispose();
+    }//GEN-LAST:event_menuTramaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -129,6 +145,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem menuCerrar;
+    private javax.swing.JMenuItem menuTrama;
     private javax.swing.JMenuItem menuVarNoU;
     // End of variables declaration//GEN-END:variables
 }
