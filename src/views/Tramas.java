@@ -44,6 +44,7 @@ public class Tramas extends javax.swing.JFrame {
         btnBorrar = new javax.swing.JButton();
         btnSubir = new javax.swing.JButton();
         btnBajar = new javax.swing.JButton();
+        btnCrearTrama = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tramas");
@@ -56,6 +57,11 @@ public class Tramas extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtTrama);
 
         btnLeerTrama.setText("Leer Trama");
+        btnLeerTrama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLeerTramaActionPerformed(evt);
+            }
+        });
 
         tblTrama.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -100,34 +106,40 @@ public class Tramas extends javax.swing.JFrame {
             }
         });
 
+        btnCrearTrama.setText("Crear Trama");
+        btnCrearTrama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearTramaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
+                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnInsertar, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-                            .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSubir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnBajar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnInsertar, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                                    .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnSubir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnBajar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(0, 40, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(136, 136, 136)
                 .addComponent(btnLeerTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(258, 258, 258))
+                .addGap(18, 18, 18)
+                .addComponent(btnCrearTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,7 +149,9 @@ public class Tramas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLeerTrama)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLeerTrama)
+                    .addComponent(btnCrearTrama))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,6 +225,30 @@ public class Tramas extends javax.swing.JFrame {
         }        
     }//GEN-LAST:event_btnBajarActionPerformed
 
+    private void btnLeerTramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeerTramaActionPerformed
+        // TODO add your handling code here:
+        int len;
+        String ttrama = txtTrama.getText();
+        int tcursor=0;
+        int fin=0;
+        for(int i = 0;modeloTabla.getRowCount() > i; i++){
+            fin += Integer.parseInt((String) modeloTabla.getValueAt(i, 1));
+            modeloTabla.setValueAt(ttrama.substring(tcursor, fin), i, 2);
+            tcursor += Integer.parseInt((String) modeloTabla.getValueAt(i, 1));
+        }
+    }//GEN-LAST:event_btnLeerTramaActionPerformed
+
+    private void btnCrearTramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearTramaActionPerformed
+        // TODO add your handling code here:
+        int ini =0;
+        int fin=0;
+        for(int i = 0;i<modeloTabla.getRowCount();i++){
+            fin= (int) modeloTabla.getValueAt(i, 1);
+            txtTrama.append((String) modeloTabla.getValueAt(i, 2).toString().substring(ini, fin));
+            
+        }
+    }//GEN-LAST:event_btnCrearTramaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -249,6 +287,7 @@ public class Tramas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBajar;
     private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnCrearTrama;
     private javax.swing.JButton btnInsertar;
     private javax.swing.JButton btnLeerTrama;
     private javax.swing.JButton btnSubir;
