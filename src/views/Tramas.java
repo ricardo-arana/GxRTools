@@ -5,6 +5,17 @@
  */
 package views;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -12,16 +23,19 @@ import javax.swing.table.DefaultTableModel;
  * @author ricardo
  */
 public class Tramas extends javax.swing.JFrame {
+
     DefaultTableModel modeloTabla;
     int indice;
+    File archivoElegido;
+
     /**
      * Creates new form Tramas
      */
     public Tramas() {
         initComponents();
-        modeloTabla = new DefaultTableModel(new String [] {
-                "Nombre", "Tamaño", "Dato"
-            }, 1);
+        modeloTabla = new DefaultTableModel(new String[]{
+            "Nombre", "Tamaño", "Dato"
+        }, 1);
         tblTrama.setModel(modeloTabla);
     }
 
@@ -45,6 +59,14 @@ public class Tramas extends javax.swing.JFrame {
         btnSubir = new javax.swing.JButton();
         btnBajar = new javax.swing.JButton();
         btnCrearTrama = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        meAbrir = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        meGuardarComo = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        meSalir = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tramas");
@@ -113,6 +135,43 @@ public class Tramas extends javax.swing.JFrame {
             }
         });
 
+        jMenu1.setText("Archivo");
+
+        meAbrir.setText("Abrir");
+        meAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                meAbrirActionPerformed(evt);
+            }
+        });
+        jMenu1.add(meAbrir);
+
+        jMenuItem2.setText("Guardar");
+        jMenu1.add(jMenuItem2);
+
+        meGuardarComo.setText("Guardar como");
+        meGuardarComo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                meGuardarComoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(meGuardarComo);
+        jMenu1.add(jSeparator1);
+
+        meSalir.setText("Salir");
+        meSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                meSalirActionPerformed(evt);
+            }
+        });
+        jMenu1.add(meSalir);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -126,27 +185,25 @@ public class Tramas extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(37, 37, 37)
+                                .addGap(40, 40, 40)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnInsertar, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                                    .addComponent(btnInsertar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnSubir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnBajar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 40, Short.MAX_VALUE)))
+                                    .addComponent(btnBajar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnLeerTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCrearTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 37, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(136, 136, 136)
-                .addComponent(btnLeerTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnCrearTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -163,7 +220,7 @@ public class Tramas extends javax.swing.JFrame {
                         .addComponent(btnSubir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnBajar)))
-                .addContainerGap(110, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
 
         pack();
@@ -171,14 +228,14 @@ public class Tramas extends javax.swing.JFrame {
 
     private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
         // TODO add your handling code here:
-        modeloTabla.addRow(new String [] {null,null,null});
+        modeloTabla.addRow(new String[]{null, null, null});
     }//GEN-LAST:event_btnInsertarActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         // TODO add your handling code here:
-        try{
-        modeloTabla.removeRow(indice);
-        }catch(java.lang.ArrayIndexOutOfBoundsException e){
+        try {
+            modeloTabla.removeRow(indice);
+        } catch (java.lang.ArrayIndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
         }
     }//GEN-LAST:event_btnBorrarActionPerformed
@@ -190,48 +247,48 @@ public class Tramas extends javax.swing.JFrame {
 
     private void btnSubirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubirActionPerformed
         // TODO add your handling code here:
-        if (indice != 0){
+        if (indice != 0) {
             Object nombreSel = modeloTabla.getValueAt(indice, 0);
             Object tamanoSel = modeloTabla.getValueAt(indice, 1);
-            Object datoSel   = modeloTabla.getValueAt(indice, 2);
-            modeloTabla.setValueAt(modeloTabla.getValueAt((indice-1), 0), indice, 0);
-            modeloTabla.setValueAt(modeloTabla.getValueAt((indice-1), 1), indice, 1);
-            modeloTabla.setValueAt(modeloTabla.getValueAt((indice-1), 2), indice, 2);
-            
-            modeloTabla.setValueAt(nombreSel, (indice-1), 0);
-            modeloTabla.setValueAt(tamanoSel, (indice-1), 1);
-            modeloTabla.setValueAt(datoSel  , (indice-1), 2);
-            
-            tblTrama.setRowSelectionInterval(indice-1, indice-1);
+            Object datoSel = modeloTabla.getValueAt(indice, 2);
+            modeloTabla.setValueAt(modeloTabla.getValueAt((indice - 1), 0), indice, 0);
+            modeloTabla.setValueAt(modeloTabla.getValueAt((indice - 1), 1), indice, 1);
+            modeloTabla.setValueAt(modeloTabla.getValueAt((indice - 1), 2), indice, 2);
+
+            modeloTabla.setValueAt(nombreSel, (indice - 1), 0);
+            modeloTabla.setValueAt(tamanoSel, (indice - 1), 1);
+            modeloTabla.setValueAt(datoSel, (indice - 1), 2);
+
+            tblTrama.setRowSelectionInterval(indice - 1, indice - 1);
             indice--;
         }
     }//GEN-LAST:event_btnSubirActionPerformed
 
     private void btnBajarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBajarActionPerformed
         // TODO add your handling code here:
-        if (indice != (modeloTabla.getRowCount()-1)){
+        if (indice != (modeloTabla.getRowCount() - 1)) {
             Object nombreSel = modeloTabla.getValueAt(indice, 0);
             Object tamanoSel = modeloTabla.getValueAt(indice, 1);
-            Object datoSel   = modeloTabla.getValueAt(indice, 2);
-            modeloTabla.setValueAt(modeloTabla.getValueAt((indice+1), 0), indice, 0);
-            modeloTabla.setValueAt(modeloTabla.getValueAt((indice+1), 1), indice, 1);
-            modeloTabla.setValueAt(modeloTabla.getValueAt((indice+1), 2), indice, 2);
-            
-            modeloTabla.setValueAt(nombreSel, (indice+1), 0);
-            modeloTabla.setValueAt(tamanoSel, (indice+1), 1);
-            modeloTabla.setValueAt(datoSel  , (indice+1), 2); 
-            tblTrama.setRowSelectionInterval(indice+1, indice+1);
-            indice++;            
-        }        
+            Object datoSel = modeloTabla.getValueAt(indice, 2);
+            modeloTabla.setValueAt(modeloTabla.getValueAt((indice + 1), 0), indice, 0);
+            modeloTabla.setValueAt(modeloTabla.getValueAt((indice + 1), 1), indice, 1);
+            modeloTabla.setValueAt(modeloTabla.getValueAt((indice + 1), 2), indice, 2);
+
+            modeloTabla.setValueAt(nombreSel, (indice + 1), 0);
+            modeloTabla.setValueAt(tamanoSel, (indice + 1), 1);
+            modeloTabla.setValueAt(datoSel, (indice + 1), 2);
+            tblTrama.setRowSelectionInterval(indice + 1, indice + 1);
+            indice++;
+        }
     }//GEN-LAST:event_btnBajarActionPerformed
 
     private void btnLeerTramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeerTramaActionPerformed
         // TODO add your handling code here:
         int len;
         String ttrama = txtTrama.getText();
-        int tcursor=0;
-        int fin=0;
-        for(int i = 0;modeloTabla.getRowCount() > i; i++){
+        int tcursor = 0;
+        int fin = 0;
+        for (int i = 0; modeloTabla.getRowCount() > i; i++) {
             fin += Integer.parseInt((String) modeloTabla.getValueAt(i, 1));
             modeloTabla.setValueAt(ttrama.substring(tcursor, fin), i, 2);
             tcursor += Integer.parseInt((String) modeloTabla.getValueAt(i, 1));
@@ -240,14 +297,86 @@ public class Tramas extends javax.swing.JFrame {
 
     private void btnCrearTramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearTramaActionPerformed
         // TODO add your handling code here:
-        int ini =0;
-        int fin=0;
-        for(int i = 0;i<modeloTabla.getRowCount();i++){
-            fin= (int) modeloTabla.getValueAt(i, 1);
+        txtTrama.setText(null);
+        int ini = 0;
+        int fin = 0;
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            fin = Integer.parseInt((String) modeloTabla.getValueAt(i, 1));
             txtTrama.append((String) modeloTabla.getValueAt(i, 2).toString().substring(ini, fin));
-            
+
         }
     }//GEN-LAST:event_btnCrearTramaActionPerformed
+
+    private void meAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_meAbrirActionPerformed
+        // TODO add your handling code here:
+        //Crear un objeto FileChooser
+        JFileChooser fc = new JFileChooser();
+        //Mostrar la ventana para abrir archivo y recoger la respuesta
+        //En el parámetro del showOpenDialog se indica la ventana
+        //  al que estará asociado. Con el valor this se asocia a la
+        //  ventana que la abre.
+
+        int respuesta = fc.showOpenDialog(this);
+        //Comprobar si se ha pulsado Aceptar
+        if (respuesta == JFileChooser.APPROVE_OPTION) {
+            archivoElegido = fc.getSelectedFile();
+            FileReader f = null;
+            try {
+                 f = new FileReader(archivoElegido);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           BufferedReader b = new BufferedReader(f);
+            String cadena;
+            DefaultTableModel df = (DefaultTableModel)tblTrama.getModel();
+            df.setRowCount(0);
+            
+            try {
+                while((cadena = b.readLine())!=null) {
+                    StringTokenizer tokens=new StringTokenizer(cadena, ",");
+                    String[] lista = new String[3] ;
+                    int i = 0;
+                    	while(tokens.hasMoreTokens()){
+                            lista[i] = tokens.nextToken();
+                        i++; 
+                        }
+                       lista[2] = String.format("%1$-"+lista[1]+"s",lista[2]);
+                        df.addRow(lista);
+                    
+                    
+                }     } catch (IOException ex) {
+                Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                b.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+       
+    }//GEN-LAST:event_meAbrirActionPerformed
+
+    private void meSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_meSalirActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_meSalirActionPerformed
+
+    private void meGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_meGuardarComoActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        //Crear un objeto FileChooser
+        JFileChooser fc = new JFileChooser();
+        //Mostrar la ventana para abrir archivo y recoger la respuesta
+        //En el parámetro del showOpenDialog se indica la ventana
+        //  al que estará asociado. Con el valor this se asocia a la
+        //  ventana que la abre.
+
+        int respuesta = fc.showSaveDialog(this);
+        //Comprobar si se ha pulsado Aceptar
+        if (respuesta == JFileChooser.APPROVE_OPTION) {
+
+        }
+    }//GEN-LAST:event_meGuardarComoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -292,8 +421,16 @@ public class Tramas extends javax.swing.JFrame {
     private javax.swing.JButton btnLeerTrama;
     private javax.swing.JButton btnSubir;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JMenuItem meAbrir;
+    private javax.swing.JMenuItem meGuardarComo;
+    private javax.swing.JMenuItem meSalir;
     private javax.swing.JTable tblTrama;
     private javax.swing.JTextArea txtTrama;
     // End of variables declaration//GEN-END:variables
