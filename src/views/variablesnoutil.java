@@ -146,17 +146,9 @@ public class variablesnoutil extends javax.swing.JFrame {
                 txtNoVariables.append( Mvariables[i]+"\n");
                 i++;
             }
-            
-            
-            
-            
-            
-            
+
         }
-        
-        
-        
-        
+     
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed

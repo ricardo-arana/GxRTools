@@ -100,8 +100,7 @@ public class Principal extends javax.swing.JFrame {
     private void menuTramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTramaActionPerformed
         // TODO add your handling code here:
         Tramas tm = new Tramas();
-        tm.show();
-        this.dispose();
+        tm.setVisible(true);
     }//GEN-LAST:event_menuTramaActionPerformed
 
     /**

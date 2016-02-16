@@ -33,6 +33,7 @@ public class Tramas extends javax.swing.JFrame {
      */
     public Tramas() {
         initComponents();
+        new PegarExcel(tblTrama);
         modeloTabla = new DefaultTableModel(new String[]{
             "Nombre", "Tamaño", "Dato"
         }, 1);
@@ -59,6 +60,10 @@ public class Tramas extends javax.swing.JFrame {
         btnSubir = new javax.swing.JButton();
         btnBajar = new javax.swing.JButton();
         btnCrearTrama = new javax.swing.JButton();
+        txtSelec = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtNroLinea = new javax.swing.JTextField();
+        BtnInserMul = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         meAbrir = new javax.swing.JMenuItem();
@@ -68,14 +73,33 @@ public class Tramas extends javax.swing.JFrame {
         meSalir = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tramas");
 
         jLabel1.setText("Tramas:");
 
         txtTrama.setColumns(20);
+        txtTrama.setFont(new java.awt.Font("Consolas", 0, 13)); // NOI18N
         txtTrama.setLineWrap(true);
         txtTrama.setRows(5);
+        txtTrama.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                txtTramaMouseDragged(evt);
+            }
+        });
+        txtTrama.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                txtTramaMouseReleased(evt);
+            }
+        });
+        txtTrama.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTramaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTramaKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(txtTrama);
 
         btnLeerTrama.setText("Leer Trama");
@@ -92,7 +116,17 @@ public class Tramas extends javax.swing.JFrame {
             new String [] {
                 "Nombre", "Tamaño", "Dato"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tblTrama.setColumnSelectionAllowed(false);
+        tblTrama.setDragEnabled(true);
         tblTrama.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblTramaMouseClicked(evt);
@@ -135,6 +169,25 @@ public class Tramas extends javax.swing.JFrame {
             }
         });
 
+        txtSelec.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtSelec.setText("0 Caracteres Selecionados");
+
+        jLabel2.setText("Lineas:");
+
+        txtNroLinea.setText("0");
+        txtNroLinea.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNroLineaActionPerformed(evt);
+            }
+        });
+
+        BtnInserMul.setText("Insertar");
+        BtnInserMul.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnInserMulActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Archivo");
 
         meAbrir.setText("Abrir");
@@ -146,6 +199,11 @@ public class Tramas extends javax.swing.JFrame {
         jMenu1.add(meAbrir);
 
         jMenuItem2.setText("Guardar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         meGuardarComo.setText("Guardar como");
@@ -181,21 +239,31 @@ public class Tramas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(40, 40, 40)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnInsertar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnSubir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnBajar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 635, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(btnLeerTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnCrearTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 37, Short.MAX_VALUE)))
+                                .addComponent(btnCrearTrama, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtSelec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtNroLinea, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(BtnInserMul))
+                                    .addComponent(btnBajar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnSubir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnInsertar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -208,7 +276,8 @@ public class Tramas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLeerTrama)
-                    .addComponent(btnCrearTrama))
+                    .addComponent(btnCrearTrama)
+                    .addComponent(txtSelec))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -219,7 +288,12 @@ public class Tramas extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSubir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBajar)))
+                        .addComponent(btnBajar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtNroLinea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BtnInserMul))))
                 .addContainerGap(84, Short.MAX_VALUE))
         );
 
@@ -284,8 +358,20 @@ public class Tramas extends javax.swing.JFrame {
 
     private void btnLeerTramaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeerTramaActionPerformed
         // TODO add your handling code here:
-        int len;
+        int len=0;
+        int lenT=0;
+        int diflen= 0;
         String ttrama = txtTrama.getText();
+        len = ttrama.length();
+        for (int i = 0; modeloTabla.getRowCount() > i; i++) {
+            lenT += Integer.parseInt( modeloTabla.getValueAt(i, 1).toString());
+        }
+        if(lenT > len){
+           diflen = lenT - len;
+           for(int j = 0; j < diflen; j++){
+               ttrama += "X";
+           }
+        }
         int tcursor = 0;
         int fin = 0;
         for (int i = 0; modeloTabla.getRowCount() > i; i++) {
@@ -302,8 +388,9 @@ public class Tramas extends javax.swing.JFrame {
         int fin = 0;
         for (int i = 0; i < modeloTabla.getRowCount(); i++) {
             fin = Integer.parseInt((String) modeloTabla.getValueAt(i, 1));
-            txtTrama.append((String) modeloTabla.getValueAt(i, 2).toString().substring(ini, fin));
-
+            if ((modeloTabla.getValueAt(i, 2).toString().length()) >= fin){
+            txtTrama.append(modeloTabla.getValueAt(i, 2).toString().substring(ini, fin));
+            }
         }
     }//GEN-LAST:event_btnCrearTramaActionPerformed
 
@@ -322,29 +409,29 @@ public class Tramas extends javax.swing.JFrame {
             archivoElegido = fc.getSelectedFile();
             FileReader f = null;
             try {
-                 f = new FileReader(archivoElegido);
+                f = new FileReader(archivoElegido);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
             }
-           BufferedReader b = new BufferedReader(f);
+            BufferedReader b = new BufferedReader(f);
             String cadena;
-            DefaultTableModel df = (DefaultTableModel)tblTrama.getModel();
+            DefaultTableModel df = (DefaultTableModel) tblTrama.getModel();
             df.setRowCount(0);
-            
+
             try {
-                while((cadena = b.readLine())!=null) {
-                    StringTokenizer tokens=new StringTokenizer(cadena, ",");
-                    String[] lista = new String[3] ;
+                while ((cadena = b.readLine()) != null) {
+                    StringTokenizer tokens = new StringTokenizer(cadena, ",");
+                    String[] lista = new String[3];
                     int i = 0;
-                    	while(tokens.hasMoreTokens()){
-                            lista[i] = tokens.nextToken();
-                        i++; 
-                        }
-                       lista[2] = String.format("%1$-"+lista[1]+"s",lista[2]);
-                        df.addRow(lista);
-                    
-                    
-                }     } catch (IOException ex) {
+                    while (tokens.hasMoreTokens()) {
+                        lista[i] = tokens.nextToken();
+                        i++;
+                    }
+                    lista[2] = String.format("%1$-" + lista[1] + "s", lista[2]);
+                    df.addRow(lista);
+
+                }
+            } catch (IOException ex) {
                 Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
@@ -353,7 +440,7 @@ public class Tramas extends javax.swing.JFrame {
                 Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-       
+
     }//GEN-LAST:event_meAbrirActionPerformed
 
     private void meSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_meSalirActionPerformed
@@ -366,6 +453,7 @@ public class Tramas extends javax.swing.JFrame {
         // TODO add your handling code here:
         //Crear un objeto FileChooser
         JFileChooser fc = new JFileChooser();
+        BufferedWriter bw;
         //Mostrar la ventana para abrir archivo y recoger la respuesta
         //En el parámetro del showOpenDialog se indica la ventana
         //  al que estará asociado. Con el valor this se asocia a la
@@ -373,10 +461,123 @@ public class Tramas extends javax.swing.JFrame {
 
         int respuesta = fc.showSaveDialog(this);
         //Comprobar si se ha pulsado Aceptar
+        int conf = 0;
         if (respuesta == JFileChooser.APPROVE_OPTION) {
+            if (fc.getSelectedFile().exists()) {
+                conf = javax.swing.JOptionPane.showConfirmDialog(null, "El archivo Existe");
+                if (conf > 0) {
+                    archivoElegido = fc.getSelectedFile();
+                    try {
+                        bw = new BufferedWriter(new FileWriter(archivoElegido));
+                        String linea = null;
+                        for (int i = 0; i < tblTrama.getRowCount(); i++) {
+                            for (int j = 0; j < tblTrama.getColumnCount(); j++) {
+                                linea = (String) tblTrama.getValueAt(i, j);
+                                if (j == 2) {
+                                    linea += "\n";
+                                } else {
+                                    linea += ",";
+                                }
+                            }
+                        }
 
+                        bw.write(linea);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            } else {
+                archivoElegido = fc.getSelectedFile();
+                try {
+                    bw = new BufferedWriter(new FileWriter(archivoElegido));
+                    String linea = "";
+                    for (int i = 0; i < tblTrama.getRowCount(); i++) {
+                        for (int j = 0; j < tblTrama.getColumnCount(); j++) {
+                            linea += (String) tblTrama.getValueAt(i, j);
+                            if (j == 2) {
+                                linea += "\n";
+                            } else {
+                                linea += ",";
+                            }
+
+                        }
+
+                    }
+
+                    bw.write(linea);
+                    bw.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Tramas.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }//GEN-LAST:event_meGuardarComoActionPerformed
+
+    private void txtTramaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTramaMouseReleased
+        // TODO add your handling code here:
+        int count;
+              String textoSelect = "";
+        if (txtTrama.getSelectedText() == null){
+            count = 0;
+        }else{
+           textoSelect =  txtTrama.getSelectedText();
+            count = textoSelect.length(); 
+        }
+
+        txtSelec.setText(count+" Caracteres Selecionados");
+    }//GEN-LAST:event_txtTramaMouseReleased
+
+    private void txtTramaMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTramaMouseDragged
+        // TODO add your handling code here:
+          int count;
+              String textoSelect = "";
+        if (txtTrama.getSelectedText() == null){
+            count = 0;
+        }else{
+           textoSelect =  txtTrama.getSelectedText();
+            count = textoSelect.length(); 
+        }
+
+        txtSelec.setText(count+" Caracteres Selecionados");
+    }//GEN-LAST:event_txtTramaMouseDragged
+
+    private void txtTramaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTramaKeyPressed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txtTramaKeyPressed
+
+    private void txtTramaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTramaKeyReleased
+        // TODO add your handling code here:
+         int count;
+              String textoSelect = "";
+        if (txtTrama.getSelectedText() == null){
+            count = 0;
+        }else{
+           textoSelect =  txtTrama.getSelectedText();
+            count = textoSelect.length(); 
+        }
+
+        txtSelec.setText(count+" Caracteres Selecionados");
+    }//GEN-LAST:event_txtTramaKeyReleased
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void txtNroLineaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNroLineaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNroLineaActionPerformed
+
+    private void BtnInserMulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInserMulActionPerformed
+        // TODO add your handling code here:
+        int nroLineas = 0;
+        nroLineas = Integer.parseInt(txtNroLinea.getText());
+        
+        for(int i=0; i<nroLineas; i++){
+            modeloTabla.addRow(new String[]{null, null, null});
+        }
+    }//GEN-LAST:event_BtnInserMulActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,6 +615,7 @@ public class Tramas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnInserMul;
     private javax.swing.JButton btnBajar;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCrearTrama;
@@ -421,6 +623,7 @@ public class Tramas extends javax.swing.JFrame {
     private javax.swing.JButton btnLeerTrama;
     private javax.swing.JButton btnSubir;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -432,6 +635,8 @@ public class Tramas extends javax.swing.JFrame {
     private javax.swing.JMenuItem meGuardarComo;
     private javax.swing.JMenuItem meSalir;
     private javax.swing.JTable tblTrama;
+    private javax.swing.JTextField txtNroLinea;
+    private javax.swing.JLabel txtSelec;
     private javax.swing.JTextArea txtTrama;
     // End of variables declaration//GEN-END:variables
 }
